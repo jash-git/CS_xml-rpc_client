@@ -10,6 +10,9 @@ using CookComputing.XmlRpc;//Step 2 ~ xml-rpc
 GOOGLE: c# xml-rpc
 
 https://stackoverflow.com/questions/40647779/how-to-call-an-api-which-is-based-on-xml-rpc-specification-in-c
+https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-php.html
+https://github.com/marcosbozzani/xmlrpcnet/tree/master/samples/SumAndDiffVB
+
 Step 1 : Created a Console Application in .NET
 
 Step 2 : Install the NuGet "xml-rpc.net"
@@ -25,23 +28,18 @@ Step 6 : To make calls to an XML-RPC server it is necessary to use an instance o
 
 namespace CS_xml_rpc_client
 {
-    public class request//Step 3 ~ xml-rpc
-    {
-        public string username { get; set; }
-        public string password { get; set; }
-    }
 
     public class response//Step 4 ~ xml-rpc
     {
-        public int id { get; set; }
-        public int status { get; set; }
+        public int sum { get; set; }
+        public int difference { get; set; }
     }
 
-    [XmlRpcUrl("https://api.XXX.com/XXX")]//Step 5 ~ xml-rpc
-    public interface FlRPC : IXmlRpcProxy
+    [XmlRpcUrl("http://127.0.0.1:8080/phpxmlrpc/xmlrpc_server.php")]//Step 5 ~ xml-rpc
+    public interface sumAndDifference : IXmlRpcProxy
     {
-        [XmlRpcMethod("login")]//endpoint name
-        response login(request request);
+        [XmlRpcMethod("sample.sumAndDifference")]//endpoint name
+        response sumAndDifference(int x,int y);
     }
 
     class Program
@@ -56,11 +54,9 @@ namespace CS_xml_rpc_client
             //---
             //Step 6 ~ xml-rpc
             response response = new response();
-            request request = new request();
-            FlRPC proxy = XmlRpcProxyGen.Create<FlRPC>();
-            request.password = "xxxxxxxx";
-            request.username = "xxxx@xxxx.org";
-            response = proxy.login(request);
+            sumAndDifference fun = XmlRpcProxyGen.Create<sumAndDifference>();
+            response = fun.sumAndDifference(5,3);
+            Console.WriteLine("response = {0},{1}", response.sum, response.difference);
             //---Step 6 ~ xml-rpc 
             Pause();
         }

@@ -1,0 +1,76 @@
+
+<!-- saved from url=(0058)https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-php.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>Using XML-RPC with PHP</title><meta name="GENERATOR" content="Modular DocBook HTML Stylesheet Version 1.63
+"><link rel="HOME" title="XML-RPC HOWTO" href="https://tldp.org/HOWTO/XML-RPC-HOWTO/index.html"><link rel="PREVIOUS" title="Using XML-RPC with Java" href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-java.html"><link rel="NEXT" title="Using XML-RPC with Microsoft .NET" href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-dotnet.html"></head><body class="section" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="NAVHEADER"><table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr><th colspan="3" align="center">XML-RPC HOWTO</th></tr><tr><td width="10%" align="left" valign="bottom"><a href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-java.html">Prev</a></td><td width="80%" align="center" valign="bottom"></td><td width="10%" align="right" valign="bottom"><a href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-dotnet.html">Next</a></td></tr></tbody></table><hr align="LEFT" width="100%"></div><div class="section"><h1 class="section"><a name="xmlrpc-howto-php">10. Using XML-RPC with PHP</a></h1><p>Edd Dumbill has implemented XML-RPC for PHP. You can download it
+    from the <a href="http://xmlrpc.usefulinc.com/" target="_top">UsefulInc XML-RPC
+    website</a>.</p><p>To install the distribution, decompress it and copy
+    <tt class="filename">xmlrpc.inc</tt> and <tt class="filename">xmlrpcs.inc</tt>
+    into the same directory as your PHP scripts.</p><div class="section"><h2 class="section"><a name="xmlrpc-howto-php-client">10.1. A PHP Client</a></h2><p>The following script shows how to embed XML-RPC calls into a
+      web page.</p><table border="0" bgcolor="#E0E0E0" width="100%"><tbody><tr><td><pre class="programlisting">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;XML-RPC PHP Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;XML-RPC PHP Demo&lt;/h1&gt;
+
+&lt;?php
+include 'xmlrpc.inc';
+
+// Make an object to represent our server.
+$server = new xmlrpc_client('/api/sample.php',
+                            'xmlrpc-c.sourceforge.net', 80);
+
+// Send a message to the server.
+$message = new xmlrpcmsg('sample.sumAndDifference',
+                         array(new xmlrpcval(5, 'int'),
+                               new xmlrpcval(3, 'int')));
+$result = $server-&gt;send($message);
+
+// Process the response.
+if (!$result) {
+    print "&lt;p&gt;Could not connect to HTTP server.&lt;/p&gt;";
+} elseif ($result-&gt;faultCode()) {
+    print "&lt;p&gt;XML-RPC Fault #" . $result-&gt;faultCode() . ": " .
+        $result-&gt;faultString();
+} else {
+    $struct = $result-&gt;value();
+    $sumval = $struct-&gt;structmem('sum');
+    $sum = $sumval-&gt;scalarval();
+    $differenceval = $struct-&gt;structmem('difference');
+    $difference = $differenceval-&gt;scalarval();
+    print "&lt;p&gt;Sum: " . htmlentities($sum) .
+        ", Difference: " . htmlentities($difference) . "&lt;/p&gt;";
+}
+?&gt;
+
+&lt;/body&gt;&lt;/html&gt;</pre></td></tr></tbody></table><p>If your webserver doesn't run PHP scripts, see the <a href="http://www.php.net/" target="_top">PHP website</a> for more
+      information.</p></div><div class="section"><h2 class="section"><a name="xmlrpc-howto-php-server">10.2. A PHP Server</a></h2><p>The following script shows how to implement an XML-RPC server
+      using PHP.</p><table border="0" bgcolor="#E0E0E0" width="100%"><tbody><tr><td><pre class="programlisting">&lt;?php
+include 'xmlrpc.inc';
+include 'xmlrpcs.inc';
+
+function sumAndDifference ($params) {
+
+    // Parse our parameters.
+    $xval = $params-&gt;getParam(0);
+    $x = $xval-&gt;scalarval();
+    $yval = $params-&gt;getParam(1);
+    $y = $yval-&gt;scalarval();
+
+    // Build our response.
+    $struct = array('sum' =&gt; new xmlrpcval($x + $y, 'int'),
+                    'difference' =&gt; new xmlrpcval($x - $y, 'int'));
+    return new xmlrpcresp(new xmlrpcval($struct, 'struct'));
+}
+
+// Declare our signature and provide some documentation.
+// (The PHP server supports remote introspection. Nifty!)
+$sumAndDifference_sig = array(array('struct', 'int', 'int'));
+$sumAndDifference_doc = 'Add and subtract two numbers';
+
+new xmlrpc_server(array('sample.sumAndDifference' =&gt;
+                        array('function' =&gt; 'sumAndDifference',
+                              'signature' =&gt; $sumAndDifference_sig,
+                              'docstring' =&gt; $sumAndDifference_doc)));
+?&gt;</pre></td></tr></tbody></table><p>You would normally invoke this as something like
+      <tt class="literal">http://localhost/path/sumAndDifference.php</tt>.</p></div></div><div class="NAVFOOTER"><hr align="LEFT" width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td width="33%" align="left" valign="top"><a href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-java.html">Prev</a></td><td width="34%" align="center" valign="top"><a href="https://tldp.org/HOWTO/XML-RPC-HOWTO/index.html">Home</a></td><td width="33%" align="right" valign="top"><a href="https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-dotnet.html">Next</a></td></tr><tr><td width="33%" align="left" valign="top">Using XML-RPC with Java</td><td width="34%" align="center" valign="top">&nbsp;</td><td width="33%" align="right" valign="top">Using XML-RPC with Microsoft .NET</td></tr></tbody></table></div></body></html>
