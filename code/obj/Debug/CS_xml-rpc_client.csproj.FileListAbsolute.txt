@@ -1,0 +1,7 @@
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\bin\Debug\CS_xml-rpc_client.exe.config
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\bin\Debug\CS_xml-rpc_client.exe
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\bin\Debug\CS_xml-rpc_client.pdb
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\bin\Debug\CookComputing.XmlRpcV2.dll
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\obj\Debug\CS_xml-rpc_client.csprojResolveAssemblyReference.cache
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\obj\Debug\CS_xml-rpc_client.exe
+C:\Users\jashliao\Desktop\192_168_1_68 API\20210414\SYWEB-V8-Workstation(Delta)\CS_xml-rpc_client\obj\Debug\CS_xml-rpc_client.pdb
