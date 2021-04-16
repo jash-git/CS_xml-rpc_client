@@ -8,16 +8,8 @@
 	<?php
 	//https://tldp.org/HOWTO/XML-RPC-HOWTO/xmlrpc-howto-php.html	
 	include 'lib/xmlrpc.inc';
-	//PS.客戶端一次呼叫兩次SERVER，要順利執行，則必須手動執行一次SERVER網址
-	// Make an object to represent our server.
-	$server = new xmlrpc_client('phpxmlrpc/xmlrpc_server.php',
-								'127.0.0.1', 8080);
-	// Send a message to the server.
-	$message = new xmlrpcmsg('sample.sumAndDifference',
-							 array(new xmlrpcval(5, 'int'),
-								   new xmlrpcval(3, 'int')));
-	$result = $server->send($message);
 
+	// Make an object to represent our server.
 	$server01 = new xmlrpc_client('phpxmlrpc/xmlrpc_server.php',
 								'127.0.0.1', 8080);	
 	$message01 = new xmlrpcmsg('sample.MultiplyAndDivide',
@@ -26,21 +18,12 @@
 	$result01 = $server01->send($message01);
 	
 	// Process the response.
-	if (!$result) {
+	if (!$result01) {
 		print "<p>Could not connect to HTTP server.</p>";
-	} elseif ($result->faultCode()) {
+	} elseif ($result01->faultCode()) {
 		print "<p>XML-RPC Fault #" . $result->faultCode() . ": " .
 			$result->faultString();
-	} else {
-		//PS.客戶端一次呼叫兩次SERVER，要順利執行，則必須手動執行一次SERVER網址
-		$struct = $result->value();
-		$sumval = $struct->structmem('sum');
-		$sum = $sumval->scalarval();
-		$differenceval = $struct->structmem('difference');
-		$difference = $differenceval->scalarval();
-		print "<p>Sum: " . htmlentities($sum) .
-			", Difference: " . htmlentities($difference) . "</p>";
-		
+	} else {	
 		$struct01 = $result01->value();
 		$multiplyval = $struct01->structmem('multiply');
 		$multiply = $multiplyval->scalarval();
